@@ -1,0 +1,13 @@
+{
+        "nama" : "Aldy Ramadhan",
+        "umur" : 24,
+        "NIM"  : "10517082",
+        "lulus" : true,
+        "hobi" : [
+            "gaming",
+            "watching series",
+            "coding"
+        ]
+    
+}
+
