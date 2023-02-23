@@ -1,4 +1,6 @@
-$('#search-button').on('click', function(){
+function cariFilm(){
+    $('#movie-list').html('');
+
     $.ajax({
         url         : 'http://www.omdbapi.com/',
         type        : 'get',
@@ -8,28 +10,79 @@ $('#search-button').on('click', function(){
             's'         : $('#search-input').val()
         },
         success     : function(result){
-            if(result.Response == 'True'){
-                // let movies = result.Search;
 
-                // $.each(movies, function(i, data){
-                //     $('movie-list').append(`
-                //     <div class="col-md-4">
-                //         <div class="card">
-                //             <img src="`+ data.Poster +`" class="card-img-top" alt="...">
-                //                 <div class="card-body">
-                //                     <h5 class="card-title">Card title</h5>
-                //                     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                //                     <a href="#" class="btn btn-primary">Go somewhere</a>
-                //                 </div>
-                //         </div>
-                //     </div> 
-                //     `);
-                // });
+            if(result.Response == "True"){
+                let movies = result.Search;
+
+                $.each(movies, function(i, data){
+                    $('#movie-list').append(`
+                        <div class="col-md-4">
+                            <div class="card">
+                                <img src="`+ data.Poster +`" class="card-img-top" alt="...">
+                                    <div class="card-body">
+                                        <h5 class="card-title">`+ data.Title +`</h5>
+                                        <h6 class="card-subtitle mb-2 text-muted">`+ data.Year +`</h6>
+                                        <a href="#" class="card-link lihat-detail" data-toggle="modal" data-target="#exampleModal" data-id="`+ data.imdbID +`">Lihat Detail</a>
+                                    </div>
+                            </div>
+                        </div>    
+                    `)
+                });
+
+                $('#search-input').val('');
+
             } else {
-                $('movie-list').html(`
-                <div class="col">
-                <h1 class="text-center">Film tidak ditemukan!</h1>
-                </div>`)
+                $('#movie-list').html(`
+                    <div class="col">
+                        <h1 class="text-center">Film tidak ditemukan</h1>
+                    </div>
+                `)
+            }
+        }
+    });
+}
+
+$('#search-button').on('click', function(){
+    cariFilm();
+});
+
+$('#search-input').on('keyup', function(e){
+    if(e.keyCode === 13){
+        cariFilm();
+    }
+});
+
+$('#movie-list').on('click',  '.lihat-detail', function(){
+    $.ajax({
+        url         : 'http://www.omdbapi.com/',
+        type        : 'get',
+        dataType    : 'json',
+        data        : {
+            'apikey'    : '7dd29744',
+            'i'         : $(this).data('id')
+        },
+
+        success     : function(movie){
+            if(movie.Response == 'True'){
+                $('.modal-body').html(`
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <img src="`+ movie.Poster +`" class="img-fluid">
+                            </div>
+                                <div class="col-md-8">
+                                <ul class="list-group">
+                                <li class="list-group-item"><h3>`+ movie.Title +`</h3></li>
+                                <li class="list-group-item">Tanggal Rilis: `+ movie.Released +`</li>
+                                <li class="list-group-item">Genre: `+ movie.Genre +`</li>
+                                <li class="list-group-item">Director: `+ movie.Director +`</li>
+                                <li class="list-group-item">Actors: `+ movie.Actors +`</li>
+                                
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                `);
             }
         }
     });
