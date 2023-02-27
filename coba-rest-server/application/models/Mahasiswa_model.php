@@ -24,6 +24,12 @@
             return $this->db->affected_rows();
         }
 
+        public function updateMahasiswa($data, $id)
+        {
+            $this->db->update('mahasiswa', $data, ['id' => $id]);
+            return $this->db->affected_rows();
+        }
+
     }
 
 ?>

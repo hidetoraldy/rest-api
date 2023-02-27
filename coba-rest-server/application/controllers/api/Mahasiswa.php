@@ -16,6 +16,8 @@
             parent::__construct();
             $this->__resTraitConstruct();
             $this->load->model('Mahasiswa_model', 'mhs');
+
+            $this->methods['index_get']['limit'] = 2;
         }
 
         public function index_get()
@@ -83,6 +85,30 @@
                 $this->response([
                     'status' => false,
                     'message' => 'id gagal ditambahkan!'
+                ], 400);
+            }
+        }
+
+        public function index_put()
+        {
+            $id = $this->put('id');
+
+            $data = [
+                'nrp' => $this->put('nrp'),
+                'nama' => $this->put('nama'),
+                'email' => $this->put('email'),
+                'jurusan' => $this->put('jurusan')
+            ];
+
+            if($this->mhs->updateMahasiswa($data, $id) > 0){
+                $this->response([
+                    'status' => true,
+                    'message' => 'id berhasil diedit!'
+                ], 201);
+            } else{
+                $this->response([
+                    'status' => false,
+                    'message' => 'id gagal diedit!'
                 ], 400);
             }
         }
